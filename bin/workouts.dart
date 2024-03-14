@@ -1,149 +1,138 @@
-class TreeNode {
-  int value;
-  TreeNode? leftChild;
-  TreeNode? rightChild;
+// ignore_for_file: prefer_typing_uninitialized_variables, body_might_complete_normally_nullable
 
-  TreeNode(this.value);
+class Node {
+  var value;
+  Node? left;
+  Node? right;
+  Node(this.value);
 }
 
-class BinaryTree {
-  TreeNode? root;
-
+class BianryTree {
+  Node? root;
   void insert(int value) {
-    root = _insertRec(root, value);
+    root = insertRec(root, value);
   }
 
-  TreeNode _insertRec(TreeNode? root, int value) {
+  Node? insertRec(Node? root, int value) {
     if (root == null) {
-      return TreeNode(value);
+      return Node(value);
     }
-
     if (value < root.value) {
-      root.leftChild = _insertRec(root.leftChild, value);
+      root.left = insertRec(root.left, value);
     } else if (value > root.value) {
-      root.rightChild = _insertRec(root.rightChild, value);
+      root.right = insertRec(root.right, value);
     }
-
     return root;
   }
 
-  void preOrderTraversal(TreeNode? node) {
+  void inOrderTraversal(Node? node) {
     if (node != null) {
+      inOrderTraversal(node.left);
       print(node.value);
-      preOrderTraversal(node.leftChild);
-      preOrderTraversal(node.rightChild);
+      inOrderTraversal(node.right);
     }
   }
 
-  TreeNode? search(int value) {
-    return _searchRec(root, value);
+  void dele(int value) {
+    root = delete(root, value);
   }
 
-  TreeNode? _searchRec(TreeNode? node, int value) {
+  Node? delete(Node? root, int value) {
+    if (root == null) {
+      return root;
+    }
+    if (value < root.value) {
+      root.left = delete(root.left, value);
+    } else if (value > root.value) {
+      root.right = delete(root.right, value);
+    } else {
+      if (root.left == null) {
+        return root.right;
+      } else if (root.right == null) {
+        return root.left;
+      }
+      root.value = minvalue(root.right);
+      root.right = delete(root.right, root.value);
+    }
+    return root;
+  }
+
+  int minvalue(Node? node) {
+    var min = node?.value;
+    if (node?.left != null) {
+      min = node?.left?.value;
+      node = node?.left;
+    }
+    return min;
+  }
+
+  Node? search(int value) {
+    return searchRec(root, value);
+  }
+
+  Node? searchRec(Node? node, int value) {
     if (node == null || node.value == value) {
       return node;
     }
-
-    TreeNode? leftResult = _searchRec(node.leftChild, value);
-    TreeNode? rightResult = _searchRec(node.rightChild, value);
-
-    return leftResult ?? rightResult;
-  }
-
-  void delete(int value) {
-    root = _deleteRec(root, value);
-  }
-
-  TreeNode? _deleteRec(TreeNode? root, int value) {
-    if (root == null) return root;
-
-    if (value < root.value) {
-      root.leftChild = _deleteRec(root.leftChild, value);
-    } else if (value > root.value) {
-      root.rightChild = _deleteRec(root.rightChild, value);
-    } else {
-      if (root.leftChild == null) {
-        return root.rightChild;
-      } else if (root.rightChild == null) {
-        return root.leftChild;
-      }
-
-      root.value = _minValue(root.rightChild!);
-      root.rightChild = _deleteRec(root.rightChild, root.value);
+    if (value < node.value) {
+      return searchRec(node.left, value);
+    } else if (value > node.value) {
+      return searchRec(node.right, value);
     }
-    return root;
   }
 
-  int _minValue(TreeNode node) {
-    int minv = node.value;
-    while (node.leftChild != null) {
-      minv = node.leftChild!.value;
-      node = node.leftChild!;
-    }
-    return minv;
-  }
-
-  int findClosestValue(TreeNode? node, int target) {
-    int closestValue = node!.value;
-
+  int findclosestvalu(Node? node, int target) {
+    int closestvalu = node?.value;
     while (node != null) {
-      if ((node.value - target).abs() < (closestValue - target).abs()) {
-        closestValue = node.value;
+      if ((node.value - target).abs() < (closestvalu - target).abs()) {
+        closestvalu = node.value;
       }
-
       if (node.value == target) {
         break;
       } else if (target < node.value) {
-        node = node.leftChild;
+        node = node.left;
       } else {
-        node = node.rightChild;
+        node = node.right;
       }
     }
-
-    return closestValue;
+    return closestvalu;
   }
 
-  bool isBST() {
-    int? prevValue;
-    bool isBSTUtil(TreeNode? node) {
+  bool isBst() {
+    int? prevvalue;
+    bool isBstUtil(Node? node) {
       if (node == null) return true;
-      if (!isBSTUtil(node.leftChild)) return false;
-      if (prevValue != null && prevValue! >= node.value) return false;
-      prevValue = node.value;
-      return isBSTUtil(node.rightChild);
+      if (!isBstUtil(node.left)) return false;
+      if (prevvalue != null && prevvalue! >= node.value) return false;
+      prevvalue = node.value;
+      return isBstUtil(node.right);
     }
 
-    return isBSTUtil(root);
+    return isBstUtil(root);
   }
 }
 
 void main() {
-  BinaryTree tree = BinaryTree();
-
-  tree.insert(5);
-  tree.insert(3);
-  tree.insert(8);
+  BianryTree tree = BianryTree();
+  tree.insert(2);
   tree.insert(1);
+  tree.insert(3);
+  tree.insert(5);
   tree.insert(4);
-
-  print("Pre-order traversal of the binary tree:");
-  tree.preOrderTraversal(tree.root);
-
-  var searchResult = tree.search(3);
-  if (searchResult != null) {
-    print("Node found: ${searchResult.value}");
+  print('in order traversal is ');
+  tree.inOrderTraversal(tree.root);
+  print('after delete');
+  tree.dele(2);
+  tree.inOrderTraversal(tree.root);
+  var searchval = tree.search(3);
+  if (searchval != null) {
+    print('searched value ${searchval.value}');
   } else {
-    print("Node not found");
+    print('value not fuunnt');
   }
-
-  tree.delete(3);
-  print("Pre-order traversal after deleting node with value 3:");
-  tree.preOrderTraversal(tree.root);
-
-  // Find the closest value to the target value
-  int targetValue = 9;
-  int closestValue = tree.findClosestValue(tree.root, targetValue);
-  print("Closest value to $targetValue in the binary tree: $closestValue");
-  bool isBST = tree.isBST();
+  int targetvalue = 6;
+  int clossestvalue = tree.findclosestvalu(tree.root, targetvalue);
+  print('closset value is $targetvalue in thr $clossestvalue');
+  bool isBST = tree.isBst();
   print("Is the binary tree a BST? $isBST");
 }

@@ -157,6 +157,19 @@ class BinaryTree {
 
     return closestValue;
   }
+
+  bool isBst() {
+    int? prevvalue;
+    bool isBstUtil(TreeNode? node) {
+      if (node == null) return true;
+      if (!isBstUtil(node.leftChild)) return false;
+      if (prevvalue != null && prevvalue! >= node.value) return false;
+      prevvalue = node.value;
+      return isBstUtil(node.rightChild);
+    }
+
+    return isBstUtil(root);
+  }
 }
 
 void main() {
@@ -186,4 +199,6 @@ void main() {
   int targetValue = 8;
   int closestValue = tree.findClosestValue(tree.root, targetValue);
   print("Closest value to $targetValue in the binary tree: $closestValue");
+  bool isBST = tree.isBst();
+  print("Is the binary tree a BST? $isBST");
 }
