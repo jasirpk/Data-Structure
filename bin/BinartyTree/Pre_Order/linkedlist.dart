@@ -1,94 +1,9 @@
-//**********************************insertion Only*********************** */
-// class TreeNode {
-//   int value;
-//   TreeNode? leftChild;
-//   TreeNode? rightChild;
-
-//   TreeNode(this.value);
-// }
-
-// class LinkedListNode {
-//   int value;
-//   LinkedListNode? next;
-
-//   LinkedListNode(this.value);
-// }
-
-// class BinaryTree {
-//   TreeNode? root;
-
-//   void insert(int value) {
-//     root = _insertRec(root, value);
-//   }
-
-//   TreeNode _insertRec(TreeNode? root, int value) {
-//     if (root == null) {
-//       return TreeNode(value);
-//     }
-
-//     if (value < root.value) {
-//       root.leftChild = _insertRec(root.leftChild, value);
-//     } else if (value > root.value) {
-//       root.rightChild = _insertRec(root.rightChild, value);
-//     }
-
-//     return root;
-//   }
-
-//   LinkedListNode? preOrderTraversal() {
-//     LinkedListNode? resultList = LinkedListNode(-1); // Dummy node
-//     _preOrderTraversalHelper(root, resultList);
-//     return resultList.next; // Return the actual head of the list
-//   }
-
-//   LinkedListNode? _preOrderTraversalHelper(
-//       TreeNode? node, LinkedListNode? resultList) {
-//     if (node != null) {
-//       resultList?.next = LinkedListNode(
-//           node.value); // Append the current node value to the list
-//       resultList = resultList?.next; // Move to the next node
-//       resultList = _preOrderTraversalHelper(
-//           node.leftChild, resultList); // Recur on left subtree
-//       resultList = _preOrderTraversalHelper(
-//           node.rightChild, resultList); // Recur on right subtree
-//     }
-//     return resultList;
-//   }
-// }
-
-// void main() {
-//   BinaryTree tree = BinaryTree();
-
-//   tree.insert(5);
-//   tree.insert(3);
-//   tree.insert(8);
-//   tree.insert(1);
-//   tree.insert(4);
-
-//   print("Pre-order traversal of the binary tree stored in a linked list:");
-
-//   LinkedListNode? result = tree.preOrderTraversal();
-//   while (result != null) {
-//     print(result.value);
-//     result = result.next;
-//   }
-// }
-
-//**********************************Every Operations*********************** */
-
 class TreeNode {
   int value;
   TreeNode? leftChild;
   TreeNode? rightChild;
 
   TreeNode(this.value);
-}
-
-class LinkedListNode {
-  int value;
-  LinkedListNode? next;
-
-  LinkedListNode(this.value);
 }
 
 class BinaryTree {
@@ -112,24 +27,12 @@ class BinaryTree {
     return root;
   }
 
-  LinkedListNode? preOrderTraversal() {
-    LinkedListNode? resultList = LinkedListNode(-1); // Dummy node
-    _preOrderTraversalHelper(root, resultList);
-    return resultList.next; // Return the actual head of the list
-  }
-
-  LinkedListNode? _preOrderTraversalHelper(
-      TreeNode? node, LinkedListNode? resultList) {
+  void preOrderTraversal(TreeNode? node) {
     if (node != null) {
-      resultList?.next = LinkedListNode(
-          node.value); // Append the current node value to the list
-      resultList = resultList?.next; // Move to the next node
-      resultList = _preOrderTraversalHelper(
-          node.leftChild, resultList); // Recur on left subtree
-      resultList = _preOrderTraversalHelper(
-          node.rightChild, resultList); // Recur on right subtree
+      print(node.value);
+      preOrderTraversal(node.leftChild);
+      preOrderTraversal(node.rightChild);
     }
-    return resultList;
   }
 
   TreeNode? search(int value) {
@@ -142,12 +45,9 @@ class BinaryTree {
     }
 
     TreeNode? leftResult = _searchRec(node.leftChild, value);
-    if (leftResult != null) {
-      return leftResult;
-    }
-
     TreeNode? rightResult = _searchRec(node.rightChild, value);
-    return rightResult;
+
+    return leftResult ?? rightResult;
   }
 
   void delete(int value) {
@@ -182,6 +82,26 @@ class BinaryTree {
     }
     return minv;
   }
+
+  int findClosestValue(TreeNode? node, int target) {
+    int closestValue = node!.value;
+
+    while (node != null) {
+      if ((node.value - target).abs() < (closestValue - target).abs()) {
+        closestValue = node.value;
+      }
+
+      if (node.value == target) {
+        break;
+      } else if (target < node.value) {
+        node = node.leftChild;
+      } else {
+        node = node.rightChild;
+      }
+    }
+
+    return closestValue;
+  }
 }
 
 void main() {
@@ -193,13 +113,8 @@ void main() {
   tree.insert(1);
   tree.insert(4);
 
-  print("Pre-order traversal of the binary tree stored in a linked list:");
-
-  LinkedListNode? result = tree.preOrderTraversal();
-  while (result != null) {
-    print(result.value);
-    result = result.next;
-  }
+  print("Pre-order traversal of the binary tree:");
+  tree.preOrderTraversal(tree.root);
 
   var searchResult = tree.search(3);
   if (searchResult != null) {
@@ -210,10 +125,10 @@ void main() {
 
   tree.delete(3);
   print("Pre-order traversal after deleting node with value 3:");
+  tree.preOrderTraversal(tree.root);
 
-  result = tree.preOrderTraversal();
-  while (result != null) {
-    print(result.value);
-    result = result.next;
-  }
+  // Find the closest value to the target value
+  int targetValue = 5;
+  int closestValue = tree.findClosestValue(tree.root, targetValue);
+  print("Closest value to $targetValue in the binary tree: $closestValue");
 }

@@ -137,6 +137,26 @@ class BinaryTree {
     }
     return minv;
   }
+
+  int findClosestValue(TreeNode? node, int target) {
+    int closestValue = node!.value;
+
+    while (node != null) {
+      if ((node.value - target).abs() < (closestValue - target).abs()) {
+        closestValue = node.value;
+      }
+
+      if (node.value == target) {
+        break;
+      } else if (target < node.value) {
+        node = node.leftChild;
+      } else {
+        node = node.rightChild;
+      }
+    }
+
+    return closestValue;
+  }
 }
 
 void main() {
@@ -161,4 +181,9 @@ void main() {
   tree.delete(3);
   print("Post-order traversal after deleting node with value 3:");
   tree.postOrderTraversal(tree.root);
+
+  // Find the closest value to the target value
+  int targetValue = 8;
+  int closestValue = tree.findClosestValue(tree.root, targetValue);
+  print("Closest value to $targetValue in the binary tree: $closestValue");
 }

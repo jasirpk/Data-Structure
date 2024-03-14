@@ -1,57 +1,149 @@
-class Queue {
-  List<int> nums = [];
-  late int size;
+class TreeNode {
+  int value;
+  TreeNode? leftChild;
+  TreeNode? rightChild;
 
-  bool isEmpty() {
-    return nums.isEmpty;
-  }
-
-  enqueue(dynamic data) {
-    return nums.add(data);
-  }
-
-  dequeue() {
-    return nums.removeAt(0);
-  }
-
-  int limit() {
-    return nums.length;
-  }
-
-  peak() {
-    return nums[0];
-  }
-
-  @override
-  String toString() {
-    return nums.toString();
-  }
-
-  // displayAll() {
-  //   for (dynamic i = 0; i < size; i++) {
-  //     List<int> temp = n;
-  //     print(temp);
-  //   }
-  // }
+  TreeNode(this.value);
 }
 
-class Stack {
-  late List<List<int>> stack;
-  push(dynamic data) {
-    return stack.add(data);
+class BinaryTree {
+  TreeNode? root;
+
+  void insert(int value) {
+    root = _insertRec(root, value);
   }
 
-  pop() {
-    return stack.removeLast();
+  TreeNode _insertRec(TreeNode? root, int value) {
+    if (root == null) {
+      return TreeNode(value);
+    }
+
+    if (value < root.value) {
+      root.leftChild = _insertRec(root.leftChild, value);
+    } else if (value > root.value) {
+      root.rightChild = _insertRec(root.rightChild, value);
+    }
+
+    return root;
+  }
+
+  void preOrderTraversal(TreeNode? node) {
+    if (node != null) {
+      print(node.value);
+      preOrderTraversal(node.leftChild);
+      preOrderTraversal(node.rightChild);
+    }
+  }
+
+  TreeNode? search(int value) {
+    return _searchRec(root, value);
+  }
+
+  TreeNode? _searchRec(TreeNode? node, int value) {
+    if (node == null || node.value == value) {
+      return node;
+    }
+
+    TreeNode? leftResult = _searchRec(node.leftChild, value);
+    TreeNode? rightResult = _searchRec(node.rightChild, value);
+
+    return leftResult ?? rightResult;
+  }
+
+  void delete(int value) {
+    root = _deleteRec(root, value);
+  }
+
+  TreeNode? _deleteRec(TreeNode? root, int value) {
+    if (root == null) return root;
+
+    if (value < root.value) {
+      root.leftChild = _deleteRec(root.leftChild, value);
+    } else if (value > root.value) {
+      root.rightChild = _deleteRec(root.rightChild, value);
+    } else {
+      if (root.leftChild == null) {
+        return root.rightChild;
+      } else if (root.rightChild == null) {
+        return root.leftChild;
+      }
+
+      root.value = _minValue(root.rightChild!);
+      root.rightChild = _deleteRec(root.rightChild, root.value);
+    }
+    return root;
+  }
+
+  int _minValue(TreeNode node) {
+    int minv = node.value;
+    while (node.leftChild != null) {
+      minv = node.leftChild!.value;
+      node = node.leftChild!;
+    }
+    return minv;
+  }
+
+  int findClosestValue(TreeNode? node, int target) {
+    int closestValue = node!.value;
+
+    while (node != null) {
+      if ((node.value - target).abs() < (closestValue - target).abs()) {
+        closestValue = node.value;
+      }
+
+      if (node.value == target) {
+        break;
+      } else if (target < node.value) {
+        node = node.leftChild;
+      } else {
+        node = node.rightChild;
+      }
+    }
+
+    return closestValue;
+  }
+
+  bool isBST() {
+    int? prevValue;
+    bool isBSTUtil(TreeNode? node) {
+      if (node == null) return true;
+      if (!isBSTUtil(node.leftChild)) return false;
+      if (prevValue != null && prevValue! >= node.value) return false;
+      prevValue = node.value;
+      return isBSTUtil(node.rightChild);
+    }
+
+    return isBSTUtil(root);
   }
 }
 
 void main() {
-  Queue queue = Queue();
-  queue.enqueue(49);
-  queue.enqueue(20);
-  queue.enqueue(30);
-  print(queue);
-  print('pop element is ${queue.dequeue()}');
-  print('peak element is ${queue.dequeue()}');
+  BinaryTree tree = BinaryTree();
+
+  tree.insert(5);
+  tree.insert(3);
+  tree.insert(8);
+  tree.insert(1);
+  tree.insert(4);
+
+  print("Pre-order traversal of the binary tree:");
+  tree.preOrderTraversal(tree.root);
+
+  var searchResult = tree.search(3);
+  if (searchResult != null) {
+    print("Node found: ${searchResult.value}");
+  } else {
+    print("Node not found");
+  }
+
+  tree.delete(3);
+  print("Pre-order traversal after deleting node with value 3:");
+  tree.preOrderTraversal(tree.root);
+
+  // Find the closest value to the target value
+  int targetValue = 9;
+  int closestValue = tree.findClosestValue(tree.root, targetValue);
+  print("Closest value to $targetValue in the binary tree: $closestValue");
+  bool isBST = tree.isBST();
+  print("Is the binary tree a BST? $isBST");
 }
