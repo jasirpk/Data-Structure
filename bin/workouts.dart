@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, body_might_complete_normally_nullable
+// ignore_for_file: prefer_typing_uninitialized_variables, body_might_complete_normally_nullable, unnecessary_null_comparison
 
 class Node {
   var value;
@@ -110,6 +110,41 @@ class BianryTree {
 
     return isBstUtil(root);
   }
+
+  int? findSecondLargestValue(Node? node) {
+    // Handle the case where the tree is empty or has only one node
+    if (node == null || (node.left == null && node.right == null)) {
+      return null;
+    }
+
+    // If the largest node has no right child but has a left child, the second largest is the largest in the left subtree
+    if (node.right == null && node.left != null) {
+      return findLargestValue(node.left);
+    }
+
+    // If the largest node has a right child and that child has no left child, then the largest node is the second largest
+    if (node.right != null && node.right!.left == null) {
+      return node.value;
+    }
+
+    // Otherwise, continue traversing the right subtree to find the second largest
+    return findSecondLargestHelper(node.right);
+  }
+
+  int findSecondLargestHelper(Node? node) {
+    while (node!.right!.right != null) {
+      node = node.right;
+    }
+    return node.value;
+  }
+
+  int findLargestValue(Node? node) {
+    // Traverse to the rightmost node
+    while (node!.right != null) {
+      node = node.right;
+    }
+    return node.value;
+  }
 }
 
 void main() {
@@ -119,8 +154,10 @@ void main() {
   tree.insert(3);
   tree.insert(5);
   tree.insert(4);
+
   print('in order traversal is ');
   tree.inOrderTraversal(tree.root);
+
   print('after delete');
   tree.dele(2);
   tree.inOrderTraversal(tree.root);
@@ -130,9 +167,26 @@ void main() {
   } else {
     print('value not fuunnt');
   }
+
   int targetvalue = 6;
   int clossestvalue = tree.findclosestvalu(tree.root, targetvalue);
   print('closset value is $targetvalue in thr $clossestvalue');
   bool isBST = tree.isBst();
   print("Is the binary tree a BST? $isBST");
+
+  // Printing the first largest value
+  int? largestValue = tree.findLargestValue(tree.root);
+  if (largestValue != null) {
+    print('First largest value: $largestValue');
+  } else {
+    print('The tree is empty.');
+  }
+
+  // Printing the second largest value
+  int? secondLargestValue = tree.findSecondLargestValue(tree.root);
+  if (secondLargestValue != null) {
+    print('Second largest value: $secondLargestValue');
+  } else {
+    print('There is no second largest value.');
+  }
 }

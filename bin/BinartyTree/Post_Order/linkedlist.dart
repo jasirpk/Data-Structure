@@ -53,6 +53,8 @@
 
 //**********************************Every Operations*********************** */
 
+// ignore_for_file: unnecessary_null_comparison
+
 class TreeNode {
   int value;
   TreeNode? leftChild;
@@ -170,6 +172,41 @@ class BinaryTree {
 
     return isBstUtil(root);
   }
+
+  int? findSecondLargestValue(TreeNode? node) {
+    // Handle the case where the tree is empty or has only one node
+    if (node == null || (node.leftChild == null && node.rightChild == null)) {
+      return null;
+    }
+
+    // If the largest node has no right child but has a left child, the second largest is the largest in the left subtree
+    if (node.rightChild == null && node.leftChild != null) {
+      return findLargestValue(node.leftChild);
+    }
+
+    // If the largest node has a right child and that child has no left child, then the largest node is the second largest
+    if (node.rightChild != null && node.rightChild!.leftChild == null) {
+      return node.value;
+    }
+
+    // Otherwise, continue traversing the right subtree to find the second largest
+    return findSecondLargestHelper(node.rightChild);
+  }
+
+  int findSecondLargestHelper(TreeNode? node) {
+    while (node!.rightChild!.rightChild != null) {
+      node = node.rightChild;
+    }
+    return node.value;
+  }
+
+  int findLargestValue(TreeNode? node) {
+    // Traverse to the rightmost node
+    while (node!.rightChild != null) {
+      node = node.rightChild;
+    }
+    return node.value;
+  }
 }
 
 void main() {
@@ -200,5 +237,19 @@ void main() {
   int closestValue = tree.findClosestValue(tree.root, targetValue);
   print("Closest value to $targetValue in the binary tree: $closestValue");
   bool isBST = tree.isBst();
-  print("Is the binary tree a BST? $isBST");
+  print("Is the binary tree a BST? $isBST"); // Printing the first largest value
+  int? largestValue = tree.findLargestValue(tree.root);
+  if (largestValue != null) {
+    print('First largest value: $largestValue');
+  } else {
+    print('The tree is empty.');
+  }
+
+  // Printing the second largest value
+  int? secondLargestValue = tree.findSecondLargestValue(tree.root);
+  if (secondLargestValue != null) {
+    print('Second largest value: $secondLargestValue');
+  } else {
+    print('There is no second largest value.');
+  }
 }
