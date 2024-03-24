@@ -1,34 +1,29 @@
 class Graph {
-  late Map<int, List<int>> adjacencyList;
-
-  Graph() {
-    adjacencyList = {};
-  }
-
+  late Map<int, List<int>> nums = {};
   void addVertex(int vertex) {
-    if (!adjacencyList.containsKey(vertex)) {
-      adjacencyList[vertex] = [];
+    if (!nums.containsKey(vertex)) {
+      nums[vertex] = [];
     }
   }
 
-  void addEdge(int vertex1, int vertex2) {
-    adjacencyList[vertex1]!.add(vertex2);
-    // adjacencyList[vertex2]!
-    //     .add(vertex1); // Uncomment this line for undirected graph
+  void addEdge(int start, int end) {
+    nums[start]!.add(end);
+
+    // for undirected Graph
+    // nums[end]!.add(start);
   }
 
-  void dfs(int startVertex) {
+  void dfs(int startvertex) {
     Set<int> visited = {};
-    _dfsRecursive(startVertex, visited);
+    dfsRecursive(startvertex, visited);
   }
 
-  void _dfsRecursive(int vertex, Set<int> visited) {
+  void dfsRecursive(int vertex, Set<int> visited) {
     visited.add(vertex);
     print(vertex);
-
-    for (int neighbor in adjacencyList[vertex]!) {
+    for (int neighbor in nums[vertex]!) {
       if (!visited.contains(neighbor)) {
-        _dfsRecursive(neighbor, visited);
+        dfsRecursive(neighbor, visited);
       }
     }
   }
@@ -54,8 +49,6 @@ void main() {
   graph.addEdge(3, 4);
   graph.addEdge(3, 5);
   graph.addEdge(4, 5);
-
-  // Perform DFS
-  print("Depth-First Search:");
+  print('Depth_First Search:');
   graph.dfs(0);
 }

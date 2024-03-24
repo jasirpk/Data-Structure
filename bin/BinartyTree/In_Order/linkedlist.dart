@@ -18,6 +18,7 @@ class BinaryTree {
     if (root == null) {
       return Node(value);
     }
+
     if (value < root.value) {
       root.left = insertRec(root.left, value);
     } else if (value > root.value) {
@@ -156,30 +157,35 @@ void main() {
   tree.delete(6);
   print('afere delerek');
   tree.inOrderTraversal(tree.root);
+
   Node? searchval = tree.search(3);
   if (searchval != null) {
     print('searched value is ${searchval.value}');
   } else {
     print('not found');
   }
+
   int? smallestvalue = tree.findsmallestvalue(tree.root);
   if (smallestvalue != null) {
     print('smallest value is $smallestvalue');
   } else {
     print('value not found');
   }
+
   int? largestvalue = tree.findlargestvalue(tree.root);
   if (largestvalue != null) {
     print('largest value is $largestvalue');
   } else {
     print('value not found');
   }
+
   int? secondlargestvalue = tree.findSeconLargestValue(tree.root);
   if (secondlargestvalue != null) {
     print('largest value is $secondlargestvalue');
   } else {
     print('value not found');
   }
+
   int target = 10;
   int clossestvalue = tree.findClossestvalue(tree.root, target);
   if (clossestvalue != null) {

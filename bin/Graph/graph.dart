@@ -1,69 +1,62 @@
-// ignore_for_file: prefer_final_fields
-
 class Graph {
-  late Map<int, List<int>> _adjacencyList = {};
-
-  // Graph() {
-  //   _adjacencyList = {};
-  // }
-
+  late Map<int, List<int>> nums = {};
   void addVertex(int vertex) {
-    if (!_adjacencyList.containsKey(vertex)) {
-      _adjacencyList[vertex] = [];
+    if (!nums.containsKey(vertex)) {
+      nums[vertex] = [];
     }
   }
 
-  void addEdge(int source, int destination) {
-    if (!_adjacencyList.containsKey(source)) {
-      addVertex(source);
+  void addEdge(int start, int end) {
+    if (!nums.containsKey(start)) {
+      addVertex(start);
     }
-    if (!_adjacencyList.containsKey(destination)) {
-      addVertex(destination);
+    if (!nums.containsKey(end)) {
+      addVertex(end);
     }
-    _adjacencyList[source]!.add(destination);
-    // For undirected graph, add the reverse edge as well
-    // _adjacencyList[destination].add(source);
+    nums[start]!.add(end);
+
+    // for underdirected Graph
+    // nums[end]!.add(start);
   }
 
-  void removeEdge(int source, int destination) {
-    if (_adjacencyList.containsKey(source)) {
-      _adjacencyList[source]!.remove(destination);
+  removeEdge(int start, int end) {
+    if (nums.containsKey(start)) {
+      nums[start]!.remove(end);
     }
     // For undirected graph, remove the reverse edge as well
-    // if (_adjacencyList.containsKey(destination)) {
-    //   _adjacencyList[destination].remove(source);
+    // if (nums.containsKey(end)) {
+    //   nums[destination].remove(start);
     // }
   }
 
-  void removeVertex(int vertex) {
-    _adjacencyList.remove(vertex);
-    _adjacencyList.forEach((key, value) {
+  removeVertex(int vertex) {
+    nums.remove(vertex);
+    nums.forEach((key, value) {
       value.remove(vertex);
     });
   }
 
-  bool hasEdge(int source, int destination) {
-    return _adjacencyList.containsKey(source) &&
-        _adjacencyList[source]!.contains(destination);
+  bool hasEdge(int start, int end) {
+    return nums.containsKey(start) && !nums[start]!.contains(end);
   }
 
-  List<int> getVertices() {
-    return _adjacencyList.keys.toList();
+  List<int> getVertex() {
+    return nums.keys.toList();
   }
 
   List<int>? getNeighbors(int vertex) {
-    return _adjacencyList.containsKey(vertex) ? _adjacencyList[vertex] : [];
+    return nums.containsKey(vertex) ? nums[vertex] : [];
   }
 
   void printGraph() {
-    _adjacencyList.forEach((key, value) {
-      print("$key -> ${value.toString()}");
+    nums.forEach((key, value) {
+      print('$key - ${value.toString()}');
     });
   }
 }
 
 void main() {
-  var graph = Graph();
+  Graph graph = Graph();
 
   graph.addEdge(0, 1);
   graph.addEdge(0, 2);
@@ -74,7 +67,7 @@ void main() {
   graph.printGraph();
 
   print("\nVertices:");
-  print(graph.getVertices());
+  print(graph.getVertex());
 
   print("\nNeighbors of vertex 2:");
   print(graph.getNeighbors(2));

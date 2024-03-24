@@ -6,9 +6,9 @@ class TrieNode {
 class Trie {
   late TrieNode _root;
 
-  // Trie() {
-  //   _root = TrieNode();
-  // }
+  Trie() {
+    _root = TrieNode();
+  }
 
   void insert(String word) {
     TrieNode current = _root;

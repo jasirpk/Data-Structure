@@ -3,11 +3,7 @@
 import 'dart:collection';
 
 class Graph {
-  late Map<int, List<int>> adjacencyList;
-
-  Graph() {
-    adjacencyList = {};
-  }
+  late Map<int, List<int>> adjacencyList = {};
 
   void addVertex(int vertex) {
     if (!adjacencyList.containsKey(vertex)) {
@@ -17,6 +13,7 @@ class Graph {
 
   void addEdge(int vertex1, int vertex2) {
     adjacencyList[vertex1]!.add(vertex2);
+
     // adjacencyList[vertex2]
     //     .add(vertex1); // Uncomment this line for undirected graph
   }
