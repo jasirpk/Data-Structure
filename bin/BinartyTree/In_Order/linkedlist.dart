@@ -99,19 +99,14 @@ class BinaryTree {
 
   int findSeconLargestValue(Node? node) {
     if (node!.right == null && node.left != null) {
-      return findlargestvalue(node);
+      return findlargestvalue(node.left);
     }
-    if (node.right != null && node.right!.left != null) {
+    if (node.right != null &&
+        node.right!.left == null &&
+        node.right!.right == null) {
       return node.value;
     }
-    return secondlargestHelper(node.right);
-  }
-
-  int secondlargestHelper(Node? node) {
-    if (node!.right!.right != null) {
-      node = node.right;
-    }
-    return node!.value;
+    return findSeconLargestValue(node.right);
   }
 
   int findClossestvalue(Node? node, int target) {
@@ -147,11 +142,11 @@ class BinaryTree {
 
 void main() {
   BinaryTree tree = BinaryTree();
-  tree.insert(4);
-  tree.insert(3);
-  tree.insert(6);
   tree.insert(8);
-  tree.insert(9);
+  tree.insert(10);
+  tree.insert(60);
+  tree.insert(80);
+  tree.insert(73);
 
   tree.inOrderTraversal(tree.root);
   tree.delete(6);
@@ -181,7 +176,7 @@ void main() {
 
   int? secondlargestvalue = tree.findSeconLargestValue(tree.root);
   if (secondlargestvalue != null) {
-    print('largest value is $secondlargestvalue');
+    print('second largest value is $secondlargestvalue');
   } else {
     print('value not found');
   }
