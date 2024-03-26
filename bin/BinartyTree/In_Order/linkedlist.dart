@@ -51,7 +51,7 @@ class BinaryTree {
       if (root.left == null) {
         return deleteRec(root.right, value);
       } else if (root.right == null) {
-        return deleteRec(root.right, value);
+        return deleteRec(root.left, value);
       }
       root.value = minvalue(root.right);
       root.right = deleteRec(root.right, root.value);
