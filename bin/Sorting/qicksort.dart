@@ -1,35 +1,25 @@
-int partition(List<int> nums, int start, end) {
-  int pivot = nums[end];
-  int i = start - 1;
+void main() {
+  // List<num> nums = [2.2, 3.1, 5, 7.4, 9, 1];
+  List<int> nums = [2, 5, 1, 3, 5, 6, 7, 4];
+  print(quickSort(nums));
+}
 
-  for (int j = start; j < end; j++) {
-    if (nums[j] < pivot) {
-      i++;
-      int temp = nums[i];
-      nums[i] = nums[j];
-      nums[j] = temp;
+List<int> quickSort(List<int> numbers) {
+  if (numbers.length <= 1) {
+    return numbers;
+  }
+  int pivot = numbers[numbers.length ~/ 2];
+
+  List<int> left = [];
+  List<int> right = [];
+
+  for (int i = 0; i < numbers.length; i++) {
+    if (i == numbers.length ~/ 2) continue;
+    if (numbers[i] > pivot) {
+      left.add(numbers[i]);
+    } else {
+      right.add(numbers[i]);
     }
   }
-
-  int temp = nums[i + 1];
-  nums[i + 1] = nums[end];
-  nums[end] = temp;
-
-  return i + 1;
-}
-
-void quicksort(List<int> nums, int start, int end) {
-  if (start < end) {
-    int pi = partition(nums, start, end);
-    quicksort(nums, start, pi - 1);
-    quicksort(nums, pi + 1, end);
-  }
-}
-
-void main() {
-  List<int> nums = [20, 23, 11, 40, 79, 96];
-  int start = 0;
-  int end = nums.length - 1;
-  quicksort(nums, start, end);
-  print(nums);
+  return [...quickSort(left), pivot, ...quickSort(right)];
 }

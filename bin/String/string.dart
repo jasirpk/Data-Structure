@@ -30,18 +30,4 @@
 //   print(Sample.display(value, 2));
 // }
 
-// **********************************Reversing String...!********************
 
-String reverseString(String str) {
-  if (str.isEmpty) {
-    return str;
-  }
-  return reverseString(str.substring(1)) + str[0];
-}
-
-void main() {
-  String original = "hello";
-  String reversed = reverseString(original);
-  print("Original String: $original");
-  print("Reversed String: $reversed");
-}

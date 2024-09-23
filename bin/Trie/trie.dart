@@ -12,6 +12,7 @@ class Trie {
 
   void insert(String word) {
     TrieNode current = _root;
+
     for (int i = 0; i < word.length; i++) {
       String char = word[i];
       if (!current.children.containsKey(char)) {
@@ -19,6 +20,7 @@ class Trie {
       }
       current = current.children[char]!;
     }
+
     current.isEndOfWord = true;
   }
 

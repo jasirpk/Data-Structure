@@ -10,7 +10,7 @@ void display(List<int> nums) {
     }
     nums[j + 1] = key;
 
-    //******************************* */  Time complexity...O(n²)!*************
+    //********************************/  Time complexity...O(n²)!*************
   }
   print(nums);
 }

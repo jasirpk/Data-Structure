@@ -1,72 +1,52 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+void main() {
+  List<int> nums = [2, 5, 1, 3, 5, 6, 7, 4];
+  print(mergeSort(nums));
+}
 
-import 'dart:core';
+List<int> mergeSort(List<int> numbers) {
+  // Base case: if the list has 1 or fewer elements, it is already sorted
+  if (numbers.length <= 1) {
+    return numbers;
+  }
 
-void merge(List<int> arr, int l, int m, int r) {
-  int i, j, k;
-  int n1 = m - l + 1;
-  int n2 = r - m;
+  // Split the list into two halves
+  int middle = numbers.length ~/ 2;
+  List<int> left = numbers.sublist(0, middle);
+  List<int> right = numbers.sublist(middle);
 
-  List<int> L = List<int>.filled(n1, 0);
-  List<int> R = List<int>.filled(n2, 0);
+  // Recursively sort both halves
+  left = mergeSort(left);
+  right = mergeSort(right);
 
-  for (i = 0; i < n1; i++) L[i] = arr[l + i];
-  for (j = 0; j < n2; j++) R[j] = arr[m + j + 1];
+  // Merge the two sorted halves
+  return merge(left, right);
+}
 
-  i = 0;
-  j = 0;
-  k = l;
-  while (i < n1 && j < n2) {
-    if (L[i] <= R[j]) {
-      arr[k] = L[i];
+// Function to merge two sorted lists
+List<int> merge(List<int> left, List<int> right) {
+  List<int> result = [];
+  int i = 0, j = 0;
+
+  // Compare elements from both lists and add the smaller one to the result
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      result.add(left[i]);
       i++;
     } else {
-      arr[k] = R[j];
+      result.add(right[j]);
       j++;
     }
-    k++;
   }
 
-  while (i < n1) {
-    arr[k] = L[i];
+  // If there are remaining elements in left or right, add them to the result
+  while (i < left.length) {
+    result.add(left[i]);
     i++;
-    k++;
   }
-
-  while (j < n2) {
-    arr[k] = R[j];
+  while (j < right.length) {
+    result.add(right[j]);
     j++;
-    k++;
   }
-}
 
-void mergeSort(List<int> arr, int l, int r) {
-  if (l < r) {
-    int m = l + (r - l) ~/ 2;
-
-    mergeSort(arr, l, m);
-    mergeSort(arr, m + 1, r);
-
-    merge(arr, l, m, r);
-  }
-}
-
-void printArray(List<int> arr) {
-  for (int i = 0; i < arr.length; i++) {
-    print("${arr[i]} ");
-  }
-  print("");
-}
-
-void main() {
-  List<int> arr = [12, 11, 13, 5, 6, 7];
-  int right = arr.length - 1;
-  int left = 0;
-  print("Given array is:");
-  printArray(arr);
-
-  mergeSort(arr, left, right);
-
-  print("\nSorted array is:");
-  printArray(arr);
+  return result;
 }

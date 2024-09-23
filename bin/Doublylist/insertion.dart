@@ -1,169 +1,90 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, unnecessary_null_comparison
-
-// *******************Adding New Node in first***************************
-
 class Node {
-  var data;
+  int value;
   Node? next;
   Node? prev;
-  Node(this.data);
+
+  Node(this.value);
 }
 
-Node? tail;
+class DoublyLinkedList {
+  Node? head;
+  Node? tail;
 
-class Sample {
-  Node? firstNode(Node? head) {
-    Node? newAdd = Node(12);
-    newAdd.next = head;
-    if (head != null) {
-      head.prev = newAdd;
+  // Insert at the beginning (head)
+  void insertAtHead(int value) {
+    Node newNode = Node(value);
+    if (head == null) {
+      head = newNode;
+      tail = newNode;
+    } else {
+      newNode.next = head;
+      head!.prev = newNode;
+      head = newNode;
     }
-    return newAdd;
   }
-}
 
-void printlist(Node? head) {
-  if (head == null) {
-    print('There are no values');
-    return;
+  // Insert at the end (tail)
+  void insertAtTail(int value) {
+    Node newNode = Node(value);
+    if (tail == null) {
+      head = newNode;
+      tail = newNode;
+    } else {
+      newNode.prev = tail;
+      tail!.next = newNode;
+      tail = newNode;
+    }
   }
-  Node? currentNode = head;
-  while (currentNode != null) {
-    print(currentNode.data);
-    currentNode = currentNode.next;
+
+  // Insert at a specific position
+  void insertAtPosition(int value, int position) {
+    if (position <= 0) {
+      insertAtHead(value);
+      return;
+    }
+
+    Node newNode = Node(value);
+    Node? current = head;
+    for (int i = 0; i < position - 1; i++) {
+      if (current?.next == null) {
+        insertAtTail(value);
+        return;
+      }
+      current = current!.next;
+    }
+
+    newNode.next = current!.next;
+    if (current.next != null) {
+      current.next!.prev = newNode;
+    }
+    current.next = newNode;
+    newNode.prev = current;
+  }
+
+  // Display the list
+  void display() {
+    Node? current = head;
+    while (current != null) {
+      print(current.value);
+      current = current.next;
+    }
   }
 }
 
 void main() {
-  Sample sample = Sample();
-  Node? node1 = Node(10);
-  var node2 = Node(20);
-  var node3 = Node(40);
+  DoublyLinkedList list = DoublyLinkedList();
 
-  node1.next = node2;
-  node2.next = node3;
-  node3.next = null;
-  Node? newvalue = sample.firstNode(node1);
-  printlist(newvalue);
+  // Insert at head
+  list.insertAtHead(10);
+  list.insertAtHead(5);
+
+  // Insert at tail
+  list.insertAtTail(15);
+  list.insertAtTail(20);
+
+  // Insert at position (e.g., insert 12 at position 2)
+  list.insertAtPosition(12, 2);
+
+  // Display list
+  list.display(); // Output: 5, 10, 12, 15, 20
 }
-
-// *********************Adding a new Node in last....****************************
-
-// class Node {
-//   var data;
-//   Node? next;
-//   Node? prev;
-//   Node(this.data);
-// }
-
-// Node? tail;
-
-// class Sample {
-//   Node? insertion(Node? head) {
-//     Node? newNode = Node(56);
-//     Node? currentNode = head;
-
-//     while (currentNode?.next != null) {
-//       currentNode = currentNode?.next;
-//     }
-
-//     currentNode?.next = newNode;
-//     newNode.prev = currentNode;
-//     tail = newNode;
-//     return head;
-//   }
-// }
-
-// void printlist(Node? head) {
-//   if (head == null) {
-//     print('There are no values');
-//     return;
-//   }
-//   Node? currentNode = head;
-//   while (currentNode != null) {
-//     print(currentNode.data);
-//     currentNode = currentNode.next;
-//   }
-// }
-
-// void main() {
-//   Sample sample = Sample();
-//   Node? node1 = Node(10);
-//   var node2 = Node(20);
-//   var node3 = Node(40);
-
-//   node1.next = node2;
-//   node2.next = node3;
-//   node3.next = null;
-//   Node? newvalue = sample.insertion(node1);
-//   printlist(newvalue);
-// }
-
-
-// ****************************Inserting in spocified position..!***********************
-
-
-// class Node {
-//   var data;
-//   Node? next;
-//   Node? prev;
-//   Node(this.data);
-// }
-
-// class Sample {
-//   Node? insertpos(Node? head, int position) {
-//     Node? newNode = Node(25);
-//     if (position < 1) {
-//       print('invalid position');
-//       return head;
-//     }
-//     if (position == 1) {
-//       newNode.next = head;
-//       if (head != null) {
-//         head.prev = newNode;
-//       }
-//       return newNode;
-//     }
-//     Node? currentNode = head;
-//     for (int i = 1; i < position - 1; i++) {
-//       if (currentNode == null) {
-//         print('Position exceeds the length of the list');
-//         return head;
-//       }
-//       currentNode = currentNode.next;
-//     }
-//     if (currentNode?.next != null) {
-//       currentNode?.next!.prev = newNode;
-//     }
-//     newNode.next = currentNode?.next;
-//     currentNode?.next = newNode;
-//     newNode.prev = currentNode;
-//     return head;
-//   }
-// }
-
-// void printlist(Node? head) {
-//   if (head == null) {
-//     print('List is empty');
-//     return;
-//   }
-//   Node? currentNode = head;
-//   while (currentNode != null) {
-//     print(currentNode.data);
-//     currentNode = currentNode.next;
-//   }
-// }
-
-// void main() {
-//   Sample sample = Sample();
-//   Node? node1 = Node(10);
-//   var node2 = Node(20);
-//   var node3 = Node(30);
-
-//   node1.next = node2;
-//   node2.next = node3;
-//   node3.next = null;
-//   Node? newvalue = sample.insertpos(node1, 4);
-//   printlist(newvalue);
-// }
-
